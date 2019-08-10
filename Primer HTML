@@ -1,0 +1,31 @@
+<html>
+
+<head>
+
+<title>Tambien es mi primera vez</title>
+
+</head>
+
+<body>
+
+    <H1>En lenguaje HTML</H1>
+
+    <img src="
+http://img.europapress.es/fotoweb/fotonoticia_20140711102030_800.jpg" width="50%" height="50%">
+
+    </img>
+
+    <p> Labrador negro </p>
+
+    <script>
+
+        alert("Hola Mundo");
+
+    </script>
+    <!--video src=""><video-->
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/IOFUM3oqMrQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+</body>
+
+</html>
+
