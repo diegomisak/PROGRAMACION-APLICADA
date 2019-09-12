@@ -1,0 +1,73 @@
+#include <ctime>    //reloj
+#include <iostream>
+#include <math.h>
+#include <thread>
+#include <vector>
+#include <mutex>
+using namespace std;
+static mutex barrier;
+ 
+void mostrarTiempo(clock_t tiempo);
+vector<long long> bounds(long long parts, long long mem);
+void contar(double& sum, long long i, long long j);
+ 
+int main(){
+    clock_t tiempo = clock();    //iniciar el reloj
+    int nucleos = 8, i = 0;
+    long long numerote = 0;
+    //numerote = 1000000;
+    numerote = 10000000000;
+    double sum = 0, sum1 = 0;
+    vector<thread> vNucleos;
+    vector<long long> limits = bounds(nucleos, numerote);
+    if (limits[0] == 0) limits[0] = 1;
+    for (i = 0; i < nucleos; i++){
+        vNucleos.push_back(thread(contar, ref(sum), limits[i], limits[i + 1]));
+    }
+    for (auto &t : vNucleos){
+        t.join();
+    }
+    
+    cout << endl << " " << sum << endl;
+    mostrarTiempo(tiempo);
+    
+    for (i = 1; i < numerote; i++){
+        sum1 = sum1 + log(double(i));
+    }
+    cout << endl << " " << sum1 << endl;
+    
+ 
+    cout << "Pulse para salir...";
+    cin.sync();
+    cin.get();
+    return 0;
+}
+ 
+ 
+void mostrarTiempo(clock_t tiempo){
+    tiempo = clock() - tiempo;
+    cout << endl << "Tiempo de ejecución es " << double(tiempo) / CLOCKS_PER_SEC << " seg." << endl;
+}
+void contar(double& sum, long long i, long long j){
+    long long k; double sumar = 0;
+    for (k = i; k < j; k++){
+        sumar = sumar + log(double(k));
+    }
+    lock_guard<mutex> block_trheads_until_Finish_this_job(barrier);
+    sum = sum + sumar;
+}
+vector<long long> bounds(long long parts, long long mem){
+    vector<long long>bnd;
+    long long delta = mem / parts;
+    long long reminder = mem % parts;
+    long long N1 = 0, N2 = 0;
+    bnd.push_back(N1);
+    for (long long i = 0; i < parts; ++i) {
+        N2 = N1 + delta;
+        if (i == parts - 1)
+            N2 += reminder;
+        bnd.push_back(N2);
+        N1 = N2;
+    }
+    return bnd;
+}
